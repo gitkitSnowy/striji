@@ -1,13 +1,50 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Дискотека ПГТ Стрижи | Голосование</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #08080e;
+      --bg2: #12121e;
+      --panel: rgba(18, 18, 30, 0.85);
+      --text: #f0ecff;
+      --text2: #9a96b8;
+      --accent: #b57aff;
+      --accent2: #6dc5ff;
+      --danger: #ff5e5e;
+      --success: #3dd68c;
+      --warning: #f0a040;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --shadow: 0 25px 60px rgba(0,0,0,0.65);
+      --glow: 0 0 40px rgba(150,100,255,0.3);
+      --radius: 32px;
+      --radius-sm: 20px;
+      --radius-xs: 14px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f0edf8;
+      --bg2: #e8e4f4;
+      --panel: rgba(255, 255, 255, 0.9);
+      --text: #1a1a2e;
+      --text2: #5a5678;
+      --accent: #7c3aed;
+      --accent2: #3b82f6;
+      --border: rgba(0,0,0,0.08);
+      --border2: rgba(0,0,0,0.12);
+      --shadow: 0 20px 50px rgba(0,0,0,0.1);
+      --glow: 0 0 30px rgba(124,58,237,0.2);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -15,24 +52,13 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    :root {
-      --bg: #0a0a12;
-      --panel: rgba(18, 18, 30, 0.85);
-      --text: #f0ecff;
-      --accent: #b57aff;
-      --accent2: #6dc5ff;
-      --danger: #ff5e5e;
-      --success: #3dd68c;
-      --warning: #f0a040;
-      --border: rgba(255,255,255,0.08);
-    }
-
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: var(--bg);
       background-image: 
-        radial-gradient(ellipse at 25% 15%, rgba(130, 60, 230, 0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 75% 85%, rgba(0, 180, 240, 0.1) 0%, transparent 55%);
+        radial-gradient(ellipse at 25% 15%, var(--accent) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 85%, var(--accent2) 0%, transparent 55%);
+      background-attachment: fixed;
       min-height: 100vh;
       min-height: 100dvh;
       display: flex;
@@ -41,47 +67,103 @@
       padding: 10px;
       color: var(--text);
       position: relative;
+      transition: background 0.4s, color 0.4s;
     }
+
+    /* Кастомный SVG эмодзи спрайт */
+    .emoji {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .emoji-lg { width: 2em; height: 2em; }
+    .emoji-xl { width: 3em; height: 3em; }
+    .emoji-xxl { width: 5em; height: 5em; }
 
     /* Основная панель */
     .main-panel {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       background: var(--panel);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       border: 1px solid var(--border);
-      border-radius: 32px;
+      border-radius: var(--radius);
       padding: 22px 16px 26px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+      box-shadow: var(--shadow);
       z-index: 1;
+      transition: all 0.4s;
+      position: relative;
     }
+
+    /* Тема и QR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .theme-toggle, .qr-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border2);
+      background: var(--bg2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+      color: var(--text2);
+    }
+    .theme-toggle:hover, .qr-btn:hover { border-color: var(--accent); }
+    .online-counter {
+      font-size: 0.7rem;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: onlinePulse 2s infinite;
+    }
+    @keyframes onlinePulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
     .header {
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .header h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #d9b3ff, #7dc9ff);
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       line-height: 1.2;
+      letter-spacing: -0.5px;
     }
     .header .school {
-      font-size: 0.85rem;
-      color: #a8a0cc;
+      font-size: 0.8rem;
+      color: var(--text2);
       font-weight: 600;
     }
     .header .date {
       font-size: 0.7rem;
-      color: #7c7c9e;
+      color: var(--text2);
+      opacity: 0.7;
     }
     .subtitle {
-      font-size: 0.75rem;
-      color: #8a8aa8;
+      font-size: 0.7rem;
+      color: var(--text2);
+      opacity: 0.8;
       margin-top: 2px;
     }
 
@@ -91,137 +173,215 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: rgba(255,255,255,0.03);
+      background: var(--bg2);
       border-radius: 30px;
       padding: 8px 16px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      transition: 0.3s;
     }
     .timer {
       font-weight: 700;
       font-size: 1.1rem;
-      color: #dacfff;
+      color: var(--text);
       font-variant-numeric: tabular-nums;
     }
-    .timer.warning { color: #ff9f7c; animation: pulse 1s infinite; }
+    .timer.warning { color: var(--warning); animation: pulse 1s infinite; }
     @keyframes pulse { 50% { opacity: 0.5; } }
     .badge {
       font-size: 0.6rem;
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 20px;
-      background: rgba(60, 220, 110, 0.2);
-      color: #5ce0a0;
+      background: rgba(60, 220, 110, 0.15);
+      color: var(--success);
       border: 1px solid rgba(60,220,110,0.3);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
     .badge.off {
-      background: rgba(255,160,60,0.2);
-      color: #ffa84d;
-      border-color: rgba(255,160,60,0.3);
+      background: rgba(240,160,64,0.15);
+      color: var(--warning);
+      border-color: rgba(240,160,64,0.3);
     }
 
     /* Поиск */
     .search-box {
       display: flex;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     .search-box input {
       flex: 1;
-      background: rgba(10,10,18,0.7);
-      border: 1.5px solid rgba(255,255,255,0.1);
-      border-radius: 22px;
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
       padding: 14px 16px;
-      font-size: 0.95rem;
-      color: #fff;
+      font-size: 0.9rem;
+      color: var(--text);
       outline: none;
-      backdrop-filter: blur(8px);
+      transition: 0.3s;
     }
     .search-box input:focus {
-      border-color: #a86eff;
-      box-shadow: 0 0 0 3px rgba(168,110,255,0.2);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(168,110,255,0.15);
     }
-    .search-box input::placeholder { color: #52526e; }
+    .search-box input::placeholder { color: var(--text2); opacity: 0.5; }
     .search-box input:disabled { opacity: 0.4; pointer-events: none; }
 
     button {
       border: none;
       border-radius: 40px;
-      padding: 14px 18px;
+      padding: 12px 18px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       white-space: nowrap;
       -webkit-user-select: none;
       user-select: none;
+      font-family: inherit;
     }
     button:active:not(:disabled) { transform: scale(0.94); }
     button:disabled { opacity: 0.4; pointer-events: none; }
 
     .btn-primary {
-      background: linear-gradient(105deg, #c69bff, #87c8ff);
-      color: #0a0a16;
-      box-shadow: 0 8px 18px rgba(130,80,240,0.35);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(130,80,240,0.3);
     }
     .btn-sm {
-      background: rgba(255,255,255,0.07);
-      color: #ddd;
-      border: 1px solid rgba(255,255,255,0.2);
+      background: var(--bg2);
+      color: var(--text);
+      border: 1px solid var(--border2);
       padding: 8px 14px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
-    .btn-danger { background: rgba(255,80,80,0.2); color: #ffaaaa; border: 1px solid rgba(255,100,100,0.35); }
-    .btn-success { background: rgba(60,200,100,0.2); color: #7ce0a0; border: 1px solid rgba(60,200,100,0.35); }
+    .btn-sm:hover { border-color: var(--accent); }
+    .btn-danger { background: rgba(255,80,80,0.15); color: var(--danger); border: 1px solid rgba(255,100,100,0.3); }
+    .btn-success { background: rgba(60,200,100,0.15); color: var(--success); border: 1px solid rgba(60,200,100,0.3); }
+
+    /* Топ-чарт */
+    .top-chart {
+      background: var(--bg2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      transition: 0.3s;
+    }
+    .top-title {
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-xs);
+      transition: 0.3s;
+      animation: slideIn 0.5s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+    }
+    .top-item:nth-child(1) { animation-delay: 0s; }
+    .top-item:nth-child(2) { animation-delay: 0.1s; }
+    .top-item:nth-child(3) { animation-delay: 0.2s; }
+    .top-rank {
+      font-weight: 900;
+      font-size: 1.2rem;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .top-rank.gold { color: var(--gold); }
+    .top-rank.silver { color: var(--silver); }
+    .top-rank.bronze { color: var(--bronze); }
+    .top-info { flex: 1; min-width: 0; }
+    .top-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-artist {
+      font-size: 0.65rem;
+      color: var(--text2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-votes {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .crown {
+      animation: crownBounce 0.8s ease infinite alternate;
+    }
+    @keyframes crownBounce {
+      0% { transform: translateY(0) rotate(-5deg); }
+      100% { transform: translateY(-6px) rotate(5deg); }
+    }
 
     /* Список треков */
     .track-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-height: 350px;
+      gap: 8px;
+      max-height: 280px;
       overflow-y: auto;
       padding-right: 4px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .track-item {
-      background: rgba(14,14,22,0.8);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 22px;
-      padding: 12px 14px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
       display: flex;
       align-items: center;
       gap: 10px;
       animation: fadeUp 0.3s ease;
+      transition: 0.3s;
     }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
     .track-cover {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-xs);
       object-fit: cover;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid var(--border2);
       flex-shrink: 0;
-      background: #1a1a2a;
+      background: var(--bg);
     }
     .track-info { flex: 1; min-width: 0; }
     .track-name {
       font-weight: 700;
-      font-size: 0.9rem;
-      color: #eceaff;
+      font-size: 0.85rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .track-artist {
-      font-size: 0.7rem;
-      color: #8a80b0;
+      font-size: 0.65rem;
+      color: var(--text2);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -233,66 +393,64 @@
       flex-shrink: 0;
     }
     .preview-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.04);
-      color: #cbb5ff;
-      font-size: 0.9rem;
+      border: 1px solid var(--border2);
+      background: var(--bg);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: 0.2s;
+      transition: 0.3s;
+      color: var(--accent);
     }
-    .preview-btn:hover { background: rgba(200,170,255,0.2); }
+    .preview-btn:hover { background: rgba(180,140,255,0.15); }
     .vote-btn {
-      border: 1.5px solid rgba(255,255,255,0.22);
+      border: 1.5px solid var(--border2);
       border-radius: 30px;
       padding: 8px 14px;
       font-weight: 700;
-      font-size: 0.85rem;
-      color: #efebff;
-      background: rgba(255,255,255,0.03);
+      font-size: 0.8rem;
+      background: var(--bg);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
-      transition: 0.2s;
+      transition: 0.3s;
+      color: var(--text);
     }
     .vote-btn.voted {
-      background: rgba(180,130,255,0.3);
-      border-color: #b77bff;
-      box-shadow: 0 0 12px rgba(170,110,255,0.4);
+      background: rgba(180,130,255,0.25);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(170,110,255,0.3);
     }
     .vote-btn:disabled { opacity: 0.35; pointer-events: none; }
 
     /* Админ */
-    .admin-area { display: flex; justify-content: center; margin-top: 14px; }
+    .admin-area { display: flex; justify-content: center; margin-top: 8px; }
     .dj-avatar {
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: rgba(20,18,32,0.85);
-      border: 2px solid rgba(255,255,255,0.2);
+      background: var(--bg2);
+      border: 2px solid var(--border2);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: 0.25s;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      transition: 0.3s;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
     }
-    .dj-avatar svg { width: 28px; height: 28px; fill: #dacfff; }
+    .dj-avatar:hover { border-color: var(--accent); }
     .dj-avatar:active { transform: scale(0.9); }
 
     .admin-panel {
-      margin-top: 14px;
+      margin-top: 12px;
       padding: 16px;
-      background: rgba(8,6,16,0.9);
-      backdrop-filter: blur(24px);
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.22);
+      background: var(--bg2);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -301,16 +459,29 @@
     @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } }
     .hidden { display: none !important; }
     .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .row input { flex: 1; min-width: 100px; padding: 10px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.5); color: #fff; font-size: 0.8rem; }
+    .row input {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-family: inherit;
+      transition: 0.3s;
+    }
+    .row input:focus { border-color: var(--accent); outline: none; }
     .row input[type="date"] { color-scheme: dark; }
-    .note { font-size: 0.65rem; color: #7a7a9e; }
+    [data-theme="light"] .row input[type="date"] { color-scheme: light; }
+    .note { font-size: 0.6rem; color: var(--text2); opacity: 0.7; }
 
     /* Объявление */
     .ann-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(14px);
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -321,21 +492,47 @@
     @keyframes fadeIn { from { opacity: 0; } }
     @keyframes fadeOut { to { opacity: 0; } }
     .ann-card {
-      background: rgba(18,16,30,0.95);
-      border: 2px solid rgba(200,170,255,0.5);
-      border-radius: 30px;
+      background: var(--panel);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
       padding: 28px 20px;
       max-width: 400px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 0 70px rgba(150,100,255,0.5);
+      box-shadow: var(--glow);
       animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } }
-    .ann-icon { font-size: 3rem; margin-bottom: 10px; }
-    .ann-msg { font-size: 1.3rem; font-weight: 700; color: #e0d5ff; line-height: 1.4; }
+    .ann-msg { font-size: 1.3rem; font-weight: 700; color: var(--text); line-height: 1.4; }
 
-    /* Модалка выбора трека */
+    /* QR модалка */
+    .qr-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9997;
+    }
+    .qr-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .qr-card canvas { border-radius: 12px; }
+    .qr-url {
+      margin-top: 10px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #333;
+      word-break: break-all;
+    }
+
+    /* Модалка поиска */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -348,125 +545,293 @@
       animation: fadeIn 0.3s;
     }
     .modal-card {
-      background: rgba(20,18,34,0.97);
-      border: 2px solid #b77bff;
-      border-radius: 28px;
+      background: var(--panel);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
       padding: 20px 16px;
-      max-width: 420px;
+      max-width: 440px;
       width: 94%;
-      max-height: 85vh;
+      max-height: 80vh;
       overflow-y: auto;
-      box-shadow: 0 0 60px rgba(150,100,255,0.4);
+      box-shadow: var(--glow);
     }
     .modal-title {
       font-weight: 800;
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-align: center;
       margin-bottom: 14px;
-      color: #e0d5ff;
+      color: var(--text);
     }
     .result-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.03);
-      margin-bottom: 8px;
+      padding: 10px 12px;
+      border-radius: var(--radius-xs);
+      background: var(--bg2);
+      margin-bottom: 6px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
       border: 1px solid transparent;
     }
-    .result-item:hover { background: rgba(180,140,255,0.1); border-color: rgba(180,140,255,0.3); }
-    .result-cover { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+    .result-item:hover {
+      background: rgba(180,140,255,0.08);
+      border-color: rgba(180,140,255,0.3);
+    }
+    .result-cover {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
     .result-info { flex: 1; min-width: 0; }
-    .result-name { font-weight: 700; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .result-artist { font-size: 0.7rem; color: #a098c0; }
-    .result-preview { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); color: #cbb5ff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-    .manual-btn { width: 100%; margin-top: 10px; }
+    .result-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .result-artist {
+      font-size: 0.65rem;
+      color: var(--text2);
+    }
+    .result-preview {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+    .manual-btn {
+      width: 100%;
+      margin-top: 8px;
+    }
 
-    .track-list::-webkit-scrollbar, .modal-card::-webkit-scrollbar { width: 4px; }
-    .track-list::-webkit-scrollbar-thumb, .modal-card::-webkit-scrollbar-thumb { background: #3a3550; border-radius: 10px; }
+    .track-list::-webkit-scrollbar,
+    .modal-card::-webkit-scrollbar { width: 3px; }
+    .track-list::-webkit-scrollbar-thumb,
+    .modal-card::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+
+    /* Победитель */
+    .winner-glow {
+      animation: winnerGlow 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes winnerGlow {
+      0% { box-shadow: 0 0 10px var(--gold); }
+      100% { box-shadow: 0 0 30px var(--gold), 0 0 60px var(--accent); }
+    }
 
     @media (max-width: 380px) {
-      .main-panel { padding: 16px 12px 20px; }
+      .main-panel { padding: 16px 10px 18px; border-radius: 24px; }
+      .header h1 { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- SVG спрайт для кастомных эмодзи -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="emoji-discoball" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="url(#discog)"/>
+      <circle cx="12" cy="12" r="3" fill="#fff" opacity="0.6"/>
+      <path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+      <defs><radialGradient id="discog"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#888"/></radialGradient></defs>
+    </symbol>
+    <symbol id="emoji-music" viewBox="0 0 24 24">
+      <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="6" cy="18" r="3" fill="currentColor"/>
+      <circle cx="18" cy="16" r="3" fill="currentColor"/>
+    </symbol>
+    <symbol id="emoji-heart" viewBox="0 0 24 24">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+    </symbol>
+    <symbol id="emoji-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="emoji-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="emoji-crown" viewBox="0 0 24 24">
+      <path d="M2 6l4 10h12l4-10-5.3 4.5L12 4l-4.7 6.5L2 6z" fill="currentColor"/>
+      <path d="M4 18h16v2H4z" fill="currentColor"/>
+    </symbol>
+    <symbol id="emoji-star" viewBox="0 0 24 24">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+    </symbol>
+    <symbol id="emoji-fire" viewBox="0 0 24 24">
+      <path d="M12 2c-2 4-6 6-6 10 0 3.3 2.7 6 6 6s6-2.7 6-6c0-4-4-6-6-10z" fill="currentColor"/>
+      <path d="M12 14c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#ffd700"/>
+    </symbol>
+    <symbol id="emoji-speaker" viewBox="0 0 24 24">
+      <rect x="4" y="8" width="4" height="8" rx="1" fill="currentColor"/>
+      <path d="M8 8l6-4v16l-6-4" fill="currentColor"/>
+      <path d="M16 8a4 4 0 010 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="emoji-lock" viewBox="0 0 24 24">
+      <rect x="5" y="11" width="14" height="11" rx="2" fill="currentColor"/>
+      <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
+      <circle cx="12" cy="16" r="1.5" fill="#fff"/>
+    </symbol>
+    <symbol id="emoji-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="5" fill="currentColor"/>
+      <path d="M12 1v2M12 21v2M1 12h2M21 12h2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="emoji-moon" viewBox="0 0 24 24">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="currentColor"/>
+    </symbol>
+    <symbol id="emoji-dj" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="4" fill="currentColor"/>
+      <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="currentColor"/>
+      <circle cx="8" cy="8" r="1.5" fill="#333"/>
+      <circle cx="16" cy="8" r="1.5" fill="#333"/>
+    </symbol>
+    <symbol id="emoji-party" viewBox="0 0 24 24">
+      <path d="M12 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="currentColor"/>
+      <circle cx="6" cy="4" r="1.5" fill="currentColor" opacity="0.5"/>
+      <circle cx="18" cy="4" r="1" fill="currentColor" opacity="0.5"/>
+      <circle cx="2" cy="10" r="1" fill="currentColor" opacity="0.3"/>
+      <circle cx="22" cy="10" r="1.5" fill="currentColor" opacity="0.4"/>
+    </symbol>
+  </svg>
+
   <!-- Объявление -->
   <div id="annOverlay" class="ann-overlay hidden">
     <div class="ann-card">
-      <div class="ann-icon">📢</div>
+      <svg class="emoji emoji-xxl" style="color:var(--accent);margin-bottom:10px;"><use href="#emoji-speaker"/></svg>
       <div class="ann-msg" id="annMsg"></div>
     </div>
   </div>
 
-  <!-- Модалка результатов поиска -->
+  <!-- QR модалка -->
+  <div id="qrOverlay" class="qr-overlay hidden" onclick="this.classList.add('hidden')">
+    <div class="qr-card" onclick="event.stopPropagation()">
+      <canvas id="qrCanvas"></canvas>
+      <div class="qr-url" id="qrUrl"></div>
+    </div>
+  </div>
+
+  <!-- Модалка поиска -->
   <div id="searchModal" class="modal-overlay hidden">
     <div class="modal-card">
-      <div class="modal-title">🔍 Найденные треки</div>
+      <div class="modal-title">
+        <svg class="emoji emoji-lg" style="color:var(--accent);"><use href="#emoji-search"/></svg>
+        Найденные треки
+      </div>
       <div id="searchResults"></div>
-      <button class="btn-sm manual-btn" id="manualAddBtn">✍️ Ввести вручную (если не нашлось)</button>
+      <button class="btn-sm manual-btn" id="manualAddBtn">
+        <svg class="emoji" style="color:var(--text2);"><use href="#emoji-music"/></svg>
+        Ввести вручную
+      </button>
       <button class="btn-sm manual-btn" id="closeSearchBtn" style="margin-top:4px;">✖️ Закрыть</button>
     </div>
   </div>
 
   <!-- Главная панель -->
   <div class="main-panel">
+    <!-- Верхняя панель: тема + QR + онлайн -->
+    <div class="top-bar">
+      <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+        <svg class="emoji" id="themeIcon"><use href="#emoji-sun"/></svg>
+      </button>
+      <div class="online-counter">
+        <div class="online-dot"></div>
+        <span id="onlineCount">0</span> онлайн
+      </div>
+      <button class="qr-btn" id="qrBtn" title="QR-код">
+        <svg class="emoji" style="color:var(--text2);"><use href="#emoji-star"/></svg>
+      </button>
+    </div>
+
     <div class="header">
-      <h1>Голосование на дискотеке</h1>
+      <h1>
+        <svg class="emoji emoji-lg" style="color:var(--accent);"><use href="#emoji-discoball"/></svg>
+        Голосование на дискотеке
+      </h1>
       <div class="school">Школа ПГТ Стрижи</div>
       <div class="date" id="headerDate">01.01.2025</div>
       <div class="subtitle">найди трек · подтверди · лайкни</div>
     </div>
 
     <div class="timer-row">
-      <span>⏱️</span>
+      <svg class="emoji" style="color:var(--text2);"><use href="#emoji-clock"/></svg>
       <span class="timer" id="timerDisplay">05:00</span>
       <span class="badge" id="statusBadge">АКТИВНО</span>
     </div>
 
+    <!-- Топ-чарт -->
+    <div class="top-chart" id="topChart">
+      <div class="top-title">
+        <svg class="emoji" style="color:var(--gold);"><use href="#emoji-crown"/></svg>
+        Топ-3
+      </div>
+      <div id="topList"></div>
+    </div>
+
     <div class="search-box">
       <input type="text" id="songInput" placeholder="Название песни или исполнитель..." enterkeyhint="search">
-      <button id="searchBtn" class="btn-primary">🔍 Найти</button>
+      <button id="searchBtn" class="btn-primary">
+        <svg class="emoji" style="color:#fff;"><use href="#emoji-search"/></svg>
+        Найти
+      </button>
     </div>
 
     <div class="track-list" id="trackList"></div>
 
     <div class="admin-area">
-      <div class="dj-avatar" id="secretAvatar">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="4"/><path d="M12 12c-4 0-7 2-7 5v1h14v-1c0-3-3-5-7-5z"/></svg>
+      <div class="dj-avatar" id="secretAvatar" title="Админ">
+        <svg class="emoji emoji-lg" style="color:var(--accent);"><use href="#emoji-dj"/></svg>
       </div>
     </div>
 
     <div id="adminPanel" class="admin-panel hidden">
-      <strong style="color:#e2d5ff;">🔐 Админ</strong>
+      <strong style="color:var(--accent);display:flex;align-items:center;gap:6px;">
+        <svg class="emoji"><use href="#emoji-lock"/></svg>
+        Админ-панель
+      </strong>
       <div class="row">
-        <span style="font-size:0.75rem;">📅</span>
+        <svg class="emoji" style="color:var(--text2);"><use href="#emoji-clock"/></svg>
         <input type="date" id="adminDate">
         <button id="saveDateBtn" class="btn-sm">Ок</button>
       </div>
       <div class="row">
         <input type="text" id="annInput" placeholder="Объявление...">
-        <button id="sendAnnBtn" class="btn-sm">📢</button>
+        <button id="sendAnnBtn" class="btn-sm">
+          <svg class="emoji"><use href="#emoji-speaker"/></svg>
+        </button>
       </div>
       <div class="row">
         <button id="pauseBtn" class="btn-sm">⏸️ Пауза</button>
-        <button id="resumeBtn" class="btn-success" style="padding:8px 14px;">▶️ Играть</button>
+        <button id="resumeBtn" class="btn-success">▶️ Играть</button>
       </div>
       <div class="row">
-        <button id="endRoundBtn" class="btn-danger">⏹️ Завершить</button>
+        <button id="endRoundBtn" class="btn-danger">
+          <svg class="emoji"><use href="#emoji-fire"/></svg>
+          Завершить
+        </button>
         <button id="resetVotesBtn" class="btn-sm">🔄 Сброс</button>
       </div>
-      <div class="note">Пауза блокирует поиск и лайки. Завершение удаляет все треки.</div>
+      <div class="note">Пауза блокирует всё. Завершение удаляет треки.</div>
     </div>
   </div>
 
+  <!-- Звук оповещения -->
+  <audio id="notifySound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CAf39/f4B/f3+AgH9/f3+Af39/gIB/f39/gH9/f4CA" type="audio/wav">
+  </audio>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update, remove, get, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove, get, child, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDjOn8OUYlnMjGWIqTIfHYpToltMfvpDLk",
@@ -483,12 +848,13 @@
     const songsRef = ref(db, 'songs');
     const settingsRef = ref(db, 'settings');
     const annRef = ref(db, 'announcement');
+    const onlineRef = ref(db, 'online');
 
-    // DOM
     const $ = id => document.getElementById(id);
     const songInput = $('songInput');
     const searchBtn = $('searchBtn');
     const trackList = $('trackList');
+    const topList = $('topList');
     const timerDisplay = $('timerDisplay');
     const statusBadge = $('statusBadge');
     const headerDate = $('headerDate');
@@ -498,95 +864,150 @@
     const searchResults = $('searchResults');
     const annOverlay = $('annOverlay');
     const annMsg = $('annMsg');
+    const onlineCount = $('onlineCount');
+    const themeToggle = $('themeToggle');
+    const themeIcon = $('themeIcon');
+    const notifySound = $('notifySound');
 
     const VOTING_DURATION = 5 * 60;
     let votingEndTime = null, votingPaused = false, timerInterval = null, annTimeout = null;
     let currentPreviewAudio = null;
+    let myOnlineRef = null;
 
-    // ---------- Реальный поиск через iTunes + Deezer ----------
+    // ---------- Онлайн счётчик ----------
+    const userId = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    myOnlineRef = ref(db, `online/${userId}`);
+    
+    function setupOnline() {
+      set(myOnlineRef, { ts: serverTimestamp() });
+      onDisconnect(myOnlineRef).remove();
+      setInterval(() => {
+        set(myOnlineRef, { ts: serverTimestamp() });
+      }, 30000);
+    }
+
+    onValue(onlineRef, (snap) => {
+      const count = snap.exists() ? Object.keys(snap.val()).length : 0;
+      onlineCount.textContent = count;
+    });
+
+    setupOnline();
+
+    // ---------- Тема ----------
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('disco_theme', theme);
+      const icon = theme === 'dark' ? 'emoji-sun' : 'emoji-moon';
+      themeIcon.querySelector('use').setAttribute('href', '#' + icon);
+    }
+
+    const savedTheme = localStorage.getItem('disco_theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // ---------- QR-код ----------
+    $('qrBtn').addEventListener('click', () => {
+      const url = window.location.href;
+      $('qrUrl').textContent = url;
+      $('qrOverlay').classList.remove('hidden');
+      
+      // Генерируем QR через API
+      const canvas = $('qrCanvas');
+      canvas.width = 200;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      
+      // Простой QR через внешний сервис
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=000000`;
+      img.onload = () => {
+        ctx.clearRect(0, 0, 200, 200);
+        ctx.drawImage(img, 0, 0);
+      };
+      img.onerror = () => {
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fillRect(0, 0, 200, 200);
+        ctx.fillStyle = '#999';
+        ctx.font = '12px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText('QR не загрузился', 100, 100);
+        ctx.fillText(url, 100, 120);
+      };
+    });
+
+    // ---------- Поиск треков ----------
     async function searchTracks(query) {
       const results = [];
-      
-      // 1. Поиск через iTunes API (надёжный, не требует ключа)
       try {
-        const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=5`);
-        const itunesData = await itunesRes.json();
-        if (itunesData.results) {
-          for (const track of itunesData.results) {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=5`);
+        const data = await res.json();
+        if (data.results) {
+          for (const t of data.results) {
             results.push({
-              id: 'it_' + track.trackId,
-              name: track.trackName || 'Без названия',
-              artist: track.artistName || 'Неизвестен',
-              cover: track.artworkUrl100 ? track.artworkUrl100.replace('100x100', '300x300') : '',
-              preview: track.previewUrl || '',
+              id: 'it_' + t.trackId,
+              name: t.trackName || 'Без названия',
+              artist: t.artistName || 'Неизвестен',
+              cover: t.artworkUrl100?.replace('100x100', '300x300') || '',
+              preview: t.previewUrl || '',
               source: 'iTunes'
             });
           }
         }
-      } catch (e) { console.warn('iTunes API error:', e); }
-
-      // 2. Поиск через Deezer (если iTunes не дал результатов)
+      } catch (e) {}
+      
       if (results.length === 0) {
         try {
-          const dzRes = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=5`);
-          const dzData = await dzRes.json();
-          if (dzData.data) {
-            for (const track of dzData.data) {
+          const res = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=5`);
+          const data = await res.json();
+          if (data.data) {
+            for (const t of data.data) {
               results.push({
-                id: 'dz_' + track.id,
-                name: track.title || 'Без названия',
-                artist: track.artist?.name || 'Неизвестен',
-                cover: track.album?.cover_medium || '',
-                preview: track.preview || '',
+                id: 'dz_' + t.id,
+                name: t.title || '',
+                artist: t.artist?.name || '',
+                cover: t.album?.cover_medium || '',
+                preview: t.preview || '',
                 source: 'Deezer'
               });
             }
           }
-        } catch (e) { console.warn('Deezer API error:', e); }
+        } catch (e) {}
       }
 
-      // Убираем дубликаты по названию + исполнителю
-      const unique = [];
-      const seen = new Set();
-      for (const r of results) {
-        const key = (r.name + '|' + r.artist).toLowerCase();
-        if (!seen.has(key)) {
-          seen.add(key);
-          unique.push(r);
-        }
-      }
-      return unique.slice(0, 5);
+      return results.filter((r, i, arr) => 
+        arr.findIndex(x => (x.name + x.artist).toLowerCase() === (r.name + r.artist).toLowerCase()) === i
+      ).slice(0, 5);
     }
 
-    // Показать модалку с результатами
     function showSearchModal(tracks) {
       searchResults.innerHTML = '';
       if (tracks.length === 0) {
-        searchResults.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">😔 Ничего не найдено.<br>Попробуй другое название или введи вручную.</p>';
+        searchResults.innerHTML = '<p style="text-align:center;color:var(--text2);padding:16px;">😔 Ничего не найдено.<br>Попробуй другое название или введи вручную.</p>';
       } else {
         tracks.forEach(track => {
           const div = document.createElement('div');
           div.className = 'result-item';
           div.innerHTML = `
-            <img class="result-cover" src="${escapeHTML(track.cover)}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 50 50%22><rect fill=%22%23333%22 width=%2250%22 height=%2250%22 rx=%2212%22/><text fill=%22%23aaa%22 x=%2225%22 y=%2230%22 text-anchor=%22middle%22 font-size=%2216%22>🎵</text></svg>'">
+            <img class="result-cover" src="${escapeHTML(track.cover)}" onerror="this.style.display='none'">
             <div class="result-info">
               <div class="result-name">${escapeHTML(track.name)}</div>
               <div class="result-artist">${escapeHTML(track.artist)} · ${track.source}</div>
             </div>
-            ${track.preview ? `<button class="result-preview preview-trigger" data-preview="${escapeHTML(track.preview)}">▶️</button>` : ''}
+            ${track.preview ? `<button class="result-preview" data-preview="${escapeHTML(track.preview)}">▶️</button>` : ''}
           `;
-          
-          // Клик по всему блоку = выбор трека
           div.addEventListener('click', (e) => {
-            if (e.target.closest('.preview-trigger')) return; // не срабатывает при клике на кнопку
+            if (e.target.closest('.result-preview')) return;
             selectTrack(track);
           });
-
           searchResults.appendChild(div);
         });
 
-        // Кнопки превью
-        searchResults.querySelectorAll('.preview-trigger').forEach(btn => {
+        searchResults.querySelectorAll('.result-preview').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
             playPreview(btn.dataset.preview);
@@ -599,7 +1020,7 @@
     function selectTrack(track) {
       searchModal.classList.add('hidden');
       stopPreview();
-      addSongToBase(track);
+      addSong(track);
     }
 
     function playPreview(url) {
@@ -610,27 +1031,16 @@
     }
 
     function stopPreview() {
-      if (currentPreviewAudio) {
-        currentPreviewAudio.pause();
-        currentPreviewAudio = null;
-      }
+      if (currentPreviewAudio) { currentPreviewAudio.pause(); currentPreviewAudio = null; }
     }
 
-    // Ручной ввод
     $('manualAddBtn').addEventListener('click', () => {
       searchModal.classList.add('hidden');
       stopPreview();
-      const name = prompt("Введи название трека вручную:");
-      if (!name || !name.trim()) return;
-      const artist = prompt("Введи исполнителя (или оставь пустым):") || 'Неизвестен';
-      addSongToBase({
-        id: 'manual_' + Date.now(),
-        name: name.trim(),
-        artist: artist.trim(),
-        cover: '',
-        preview: '',
-        source: 'Ручной ввод'
-      });
+      const name = prompt("Название трека:");
+      if (!name?.trim()) return;
+      const artist = prompt("Исполнитель:") || 'Неизвестен';
+      addSong({ id: 'm_' + Date.now(), name: name.trim(), artist: artist.trim(), cover: '', preview: '', source: 'Вручную' });
     });
 
     $('closeSearchBtn').addEventListener('click', () => {
@@ -638,24 +1048,21 @@
       stopPreview();
     });
 
-    // Фильтр мата
     const badWords = ['хуй','пизда','ебать','блядь','блять','сука','нахер','нахуй','пошёл','пошел','залупа','жопа','говно','мудак','пидор','пидорас','гандон','шлюха','fuck','shit','bitch','asshole','dick','pussy','cunt'];
     function hasBadWords(t) {
       const l = t.toLowerCase().replace(/[^а-яёa-z0-9 ]/gi, '');
       return badWords.some(w => l.includes(w.replace(/[^а-яёa-z0-9 ]/gi, '')));
     }
 
-    // Поиск
     searchBtn.addEventListener('click', async () => {
       const q = songInput.value.trim();
       if (!q) return alert("Введи название!");
       if (hasBadWords(q)) return alert("❌ Нецензурная лексика!");
-      
       searchBtn.disabled = true;
-      searchBtn.textContent = '⏳ Ищу...';
+      searchBtn.innerHTML = '<svg class="emoji" style="color:#fff;"><use href="#emoji-clock"/></svg> Ищу...';
       const tracks = await searchTracks(q);
       searchBtn.disabled = false;
-      searchBtn.textContent = '🔍 Найти';
+      searchBtn.innerHTML = '<svg class="emoji" style="color:#fff;"><use href="#emoji-search"/></svg> Найти';
       showSearchModal(tracks);
       songInput.value = '';
     });
@@ -664,23 +1071,17 @@
       if (e.key === 'Enter') { e.preventDefault(); searchBtn.click(); }
     });
 
-    // Добавление в Firebase
-    async function addSongToBase(track) {
+    // Добавление в базу
+    async function addSong(track) {
       const s = (await get(settingsRef)).val() || {};
-      if (s.votingPaused) return alert("⏸️ Голосование на паузе.");
+      if (s.votingPaused) return alert("⏸️ Пауза.");
       if (s.roundEndTime && Date.now() >= s.roundEndTime) return alert("⏰ Раунд завершён.");
-
       const songs = (await get(songsRef)).val() || {};
       if (Object.keys(songs).length >= 5) return alert("🎵 Максимум 5 треков!");
-
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       await set(ref(db, `songs/${id}`), {
-        id,
-        name: track.name,
-        artist: track.artist,
-        cover: track.cover,
-        preview: track.preview,
-        votes: 0
+        id, name: track.name, artist: track.artist,
+        cover: track.cover, preview: track.preview, votes: 0
       });
     }
 
@@ -690,17 +1091,15 @@
       if (!snap.exists()) {
         const now = Date.now();
         await set(settingsRef, {
-          votingActive: true,
-          votingPaused: false,
+          votingActive: true, votingPaused: false,
           roundEndTime: now + VOTING_DURATION * 1000,
-          roundStarted: now,
-          eventDate: '01.01.2025'
+          roundStarted: now, eventDate: '01.01.2025'
         });
       } else {
         const s = snap.val();
         if (s.eventDate) {
           headerDate.textContent = s.eventDate;
-          adminDate.value = (s.eventDate.split('.').reverse().join('-'));
+          adminDate.value = s.eventDate.split('.').reverse().join('-');
         }
       }
     }
@@ -714,17 +1113,22 @@
       updateUI();
     });
 
+    // Объявления со звуком
+    let lastAnnTimestamp = 0;
     onValue(annRef, snap => {
       if (!snap.exists()) return;
       const d = snap.val();
-      if (d.message && d.timestamp && Date.now() - d.timestamp < 10000) {
+      if (d.message && d.timestamp && d.timestamp > lastAnnTimestamp) {
+        lastAnnTimestamp = d.timestamp;
         showAnnouncement(d.message);
         setTimeout(() => remove(annRef), 500);
-      } else remove(annRef);
+      }
     });
 
     function showAnnouncement(msg) {
       if (annTimeout) clearTimeout(annTimeout);
+      notifySound.currentTime = 0;
+      notifySound.play().catch(() => {});
       annMsg.textContent = msg;
       annOverlay.classList.remove('hidden', 'fade-out');
       annTimeout = setTimeout(() => {
@@ -753,47 +1157,84 @@
     }
     timerInterval = setInterval(updateTimer, 1000);
 
-    // Локальные голоса
+    // Голоса
     const SK = 'disco_voted_songs';
     function getVoted() { try { return JSON.parse(localStorage.getItem(SK)||'{}'); } catch { return {}; } }
     function markVoted(id) { const v=getVoted(); v[id]=true; localStorage.setItem(SK,JSON.stringify(v)); }
     function hasVoted(id) { return !!getVoted()[id]; }
     function clearVoted() { localStorage.removeItem(SK); }
 
-    // Голосование
     window.voteForSong = async function(id, votes) {
       const s = (await get(settingsRef)).val()||{};
       if (s.votingPaused) return alert("⏸️ Пауза.");
       if (s.roundEndTime && Date.now() >= s.roundEndTime) return alert("⏰ Время вышло.");
-      if (hasVoted(id)) return alert("⏳ Уже лайкнул этот трек!");
+      if (hasVoted(id)) return alert("⏳ Уже лайкнул!");
       await update(ref(db, `songs/${id}`), { votes: votes + 1 });
       markVoted(id);
       return true;
     };
 
     window.playPreviewGlobal = function(url) {
-      if (!url) return alert("Нет превью.");
+      if (!url) return;
       stopPreview();
       playPreview(url);
     };
 
-    // Отображение треков
+    // Отображение
     onValue(songsRef, snap => {
       trackList.innerHTML = '';
+      topList.innerHTML = '';
+      
       if (snap.exists()) {
-        Object.values(snap.val()).sort((a,b) => b.votes - a.votes).forEach(track => {
+        const songs = Object.values(snap.val()).sort((a,b) => b.votes - a.votes);
+        
+        // Топ-3
+        const medals = ['gold', 'silver', 'bronze'];
+        const medalEmojis = ['emoji-crown', 'emoji-star', 'emoji-fire'];
+        const top3 = songs.slice(0, 3);
+        
+        if (top3.length > 0) {
+          top3.forEach((track, i) => {
+            const div = document.createElement('div');
+            div.className = 'top-item' + (i === 0 ? ' winner-glow' : '');
+            div.innerHTML = `
+              <span class="top-rank ${medals[i]}">
+                <svg class="emoji emoji-lg ${i === 0 ? 'crown' : ''}" style="color:var(--${medals[i]});">
+                  <use href="#${medalEmojis[i]}"/>
+                </svg>
+              </span>
+              <div class="top-info">
+                <div class="top-name">${escapeHTML(track.name)}</div>
+                <div class="top-artist">${escapeHTML(track.artist)}</div>
+              </div>
+              <span class="top-votes">
+                <svg class="emoji" style="color:var(--accent);"><use href="#emoji-heart"/></svg>
+                ${track.votes}
+              </span>
+            `;
+            topList.appendChild(div);
+          });
+        } else {
+          topList.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text2);font-size:0.8rem;">Пока нет треков в топе</div>';
+        }
+
+        // Все треки
+        songs.forEach(track => {
           const div = document.createElement('div');
           div.className = 'track-item';
           div.innerHTML = `
-            <img class="track-cover" src="${escapeHTML(track.cover)}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 48 48%22><rect fill=%22%23222%22 width=%2248%22 height=%2248%22 rx=%2214%22/><text fill=%22%23999%22 x=%2224%22 y=%2228%22 text-anchor=%22middle%22 font-size=%2216%22>🎵</text></svg>'">
+            <img class="track-cover" src="${escapeHTML(track.cover)}" onerror="this.style.display='none'">
             <div class="track-info">
               <div class="track-name">${escapeHTML(track.name)}</div>
               <div class="track-artist">${escapeHTML(track.artist)}</div>
             </div>
             <div class="track-actions">
-              ${track.preview ? `<button class="preview-btn" data-preview="${escapeHTML(track.preview)}">▶️</button>` : ''}
+              ${track.preview ? `<button class="preview-btn" data-preview="${escapeHTML(track.preview)}">
+                <svg class="emoji" style="color:var(--accent);"><use href="#emoji-music"/></svg>
+              </button>` : ''}
               <button class="vote-btn ${hasVoted(track.id)?'voted':''}" data-id="${track.id}" data-votes="${track.votes}">
-                ❤️ <span>${track.votes}</span>
+                <svg class="emoji" style="color:currentColor;"><use href="#emoji-heart"/></svg>
+                <span>${track.votes}</span>
               </button>
             </div>`;
           trackList.appendChild(div);
@@ -818,7 +1259,7 @@
           });
         });
       } else {
-        trackList.innerHTML = '<div style="padding:28px;text-align:center;color:#6b6b80;font-size:0.9rem;">🎤 Пока никто не предложил трек.<br>Найди и добавь первый!</div>';
+        trackList.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text2);font-size:0.85rem;">🎤 Пока никто не предложил трек.<br>Найди и добавь первый!</div>';
       }
       updateUI();
     });
@@ -856,22 +1297,20 @@
     $('resumeBtn').addEventListener('click', async () => { await update(settingsRef, { votingPaused: false }); });
 
     $('endRoundBtn').addEventListener('click', async () => {
-      if(!confirm('⏹️ Завершить опрос и удалить ВСЕ треки?')) return;
+      if(!confirm('⏹️ Завершить и удалить ВСЕ треки?')) return;
       await remove(songsRef);
       const now = Date.now();
       await set(settingsRef, {
-        votingActive: true,
-        votingPaused: false,
+        votingActive: true, votingPaused: false,
         roundEndTime: now + VOTING_DURATION * 1000,
-        roundStarted: now,
-        eventDate: headerDate.textContent
+        roundStarted: now, eventDate: headerDate.textContent
       });
       clearVoted();
       stopPreview();
     });
 
     $('resetVotesBtn').addEventListener('click', async () => {
-      if(!confirm('🔄 Сбросить все лайки?')) return;
+      if(!confirm('🔄 Сбросить лайки?')) return;
       const snap = await get(songsRef);
       if(snap.exists()) {
         const u = {};
